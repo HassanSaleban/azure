@@ -1,0 +1,81 @@
+{
+	"name": "film",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sakila",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "film_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "title",
+				"type": "varchar"
+			},
+			{
+				"name": "description",
+				"type": "text"
+			},
+			{
+				"name": "release_year",
+				"type": "varchar"
+			},
+			{
+				"name": "language_id",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "original_language_id",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "rental_duration",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "rental_rate",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "length",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "replacement_cost",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "rating",
+				"type": "varchar"
+			},
+			{
+				"name": "special_features",
+				"type": "varchar"
+			},
+			{
+				"name": "last_update",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "film"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

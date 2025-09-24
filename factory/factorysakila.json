@@ -1,0 +1,9 @@
+{
+	"name": "factorysakila",
+	"location": "swedencentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "15c36bcd-b363-45da-9cf0-b3087926de09",
+		"tenantId": "72db22d5-53b6-493c-bbb2-f36644f1f812"
+	}
+}

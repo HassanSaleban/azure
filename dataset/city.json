@@ -1,0 +1,38 @@
+{
+	"name": "city",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sakila",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "city_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "city",
+				"type": "varchar"
+			},
+			{
+				"name": "country_id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "last_update",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "city"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

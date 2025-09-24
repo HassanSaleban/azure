@@ -1,0 +1,33 @@
+{
+	"name": "language",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sakila",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "language_id",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "name",
+				"type": "char"
+			},
+			{
+				"name": "last_update",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "language"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

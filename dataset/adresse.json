@@ -1,0 +1,54 @@
+{
+	"name": "adresse",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sakila",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "address_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "address",
+				"type": "varchar"
+			},
+			{
+				"name": "address2",
+				"type": "varchar"
+			},
+			{
+				"name": "district",
+				"type": "varchar"
+			},
+			{
+				"name": "city_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "postal_code",
+				"type": "varchar"
+			},
+			{
+				"name": "phone",
+				"type": "varchar"
+			},
+			{
+				"name": "last_update",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "address"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

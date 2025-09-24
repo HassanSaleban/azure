@@ -1,0 +1,154 @@
+{
+	"name": "FluxDimfilm",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "film",
+						"type": "DatasetReference"
+					},
+					"name": "film"
+				},
+				{
+					"dataset": {
+						"referenceName": "language",
+						"type": "DatasetReference"
+					},
+					"name": "Language"
+				},
+				{
+					"linkedService": {
+						"referenceName": "sakila_DW_simple",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Dimfilmcheck"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Dimfilm",
+						"type": "DatasetReference"
+					},
+					"name": "Dimfilm"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectFilm"
+				},
+				{
+					"name": "selectLanguage"
+				},
+				{
+					"name": "jointureLanguage"
+				},
+				{
+					"name": "selectFinal"
+				},
+				{
+					"name": "exists1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          film_id as integer,",
+				"          title as string,",
+				"          description as string,",
+				"          release_year as string,",
+				"          language_id as integer,",
+				"          original_language_id as integer,",
+				"          rental_duration as integer,",
+				"          rental_rate as decimal(4,2),",
+				"          length as integer,",
+				"          replacement_cost as decimal(5,2),",
+				"          rating as string,",
+				"          special_features as string,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> film",
+				"source(output(",
+				"          language_id as integer,",
+				"          name as string,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Language",
+				"source(output(",
+				"          SK_film as integer,",
+				"          BK_film as integer,",
+				"          title as string,",
+				"          length_min as integer,",
+				"          language as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Dim_Film',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> Dimfilmcheck",
+				"film select(mapColumn(",
+				"          film_id,",
+				"          title,",
+				"          language_id,",
+				"          length",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFilm",
+				"Language select(mapColumn(",
+				"          language_id,",
+				"          name",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectLanguage",
+				"selectFilm, selectLanguage join(selectFilm@language_id == selectLanguage@language_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> jointureLanguage",
+				"jointureLanguage select(mapColumn(",
+				"          film_id,",
+				"          title,",
+				"          length,",
+				"          name",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFinal",
+				"selectFinal, Dimfilmcheck exists(film_id == BK_film,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SK_film as integer,",
+				"          BK_film as integer,",
+				"          title as string,",
+				"          length_min as integer,",
+				"          language as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          BK_film = film_id,",
+				"          title,",
+				"          length_min = length,",
+				"          language = name",
+				"     )) ~> Dimfilm"
+			]
+		}
+	}
+}

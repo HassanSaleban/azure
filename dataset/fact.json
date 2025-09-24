@@ -1,0 +1,79 @@
+{
+	"name": "fact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sakila_DW_simple",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "row_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BK_inventory",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BK_rental",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BK_payment",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "total_payment",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "datekey_rental",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "datekey_return",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "datekey_payment",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SK_customer",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SK_staff",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SK_store",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SK_film",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Fact_Rental"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

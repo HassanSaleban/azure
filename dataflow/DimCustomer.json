@@ -1,0 +1,232 @@
+{
+	"name": "DimCustomer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "customers",
+						"type": "DatasetReference"
+					},
+					"name": "Customer"
+				},
+				{
+					"dataset": {
+						"referenceName": "city",
+						"type": "DatasetReference"
+					},
+					"name": "city"
+				},
+				{
+					"dataset": {
+						"referenceName": "country",
+						"type": "DatasetReference"
+					},
+					"name": "country"
+				},
+				{
+					"dataset": {
+						"referenceName": "adresse",
+						"type": "DatasetReference"
+					},
+					"name": "adresse"
+				},
+				{
+					"linkedService": {
+						"referenceName": "sakila_DW_simple",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Dimcustomercheck"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DimCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "DimCustomer"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectCity"
+				},
+				{
+					"name": "selectCountry"
+				},
+				{
+					"name": "selectAdresse"
+				},
+				{
+					"name": "selectCustomer"
+				},
+				{
+					"name": "jointureAdresse"
+				},
+				{
+					"name": "customerAdresse"
+				},
+				{
+					"name": "joindrecity"
+				},
+				{
+					"name": "joindreCountry"
+				},
+				{
+					"name": "selectFinal"
+				},
+				{
+					"name": "exists1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_id as integer,",
+				"          store_id as integer,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          email as string,",
+				"          address_id as integer,",
+				"          active as string,",
+				"          create_date as timestamp,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Customer",
+				"source(output(",
+				"          city_id as integer,",
+				"          city as string,",
+				"          country_id as integer,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> city",
+				"source(output(",
+				"          country_id as integer,",
+				"          country as string,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> country",
+				"source(output(",
+				"          address_id as integer,",
+				"          address as string,",
+				"          address2 as string,",
+				"          district as string,",
+				"          city_id as integer,",
+				"          postal_code as string,",
+				"          phone as string,",
+				"          last_update as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> adresse",
+				"source(output(",
+				"          SK_customer as integer,",
+				"          BK_customer as integer,",
+				"          email as string,",
+				"          country as string,",
+				"          city as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Dim_Customer',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> Dimcustomercheck",
+				"city select(mapColumn(",
+				"          city_id,",
+				"          city,",
+				"          country_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectCity",
+				"country select(mapColumn(",
+				"          country_id,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectCountry",
+				"adresse select(mapColumn(",
+				"          address_id,",
+				"          city_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectAdresse",
+				"Customer select(mapColumn(",
+				"          customer_id,",
+				"          email,",
+				"          address_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectCustomer",
+				"selectCustomer, selectAdresse join(selectCustomer@address_id == selectAdresse@address_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> jointureAdresse",
+				"jointureAdresse select(mapColumn(",
+				"          customer_id,",
+				"          email,",
+				"          city_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> customerAdresse",
+				"customerAdresse, selectCity join(customerAdresse@city_id == selectCity@city_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joindrecity",
+				"joindrecity, selectCountry join(selectCity@country_id == selectCountry@country_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joindreCountry",
+				"joindreCountry select(mapColumn(",
+				"          customer_id,",
+				"          email,",
+				"          city,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFinal",
+				"selectFinal, Dimcustomercheck exists(customer_id == BK_customer,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SK_customer as integer,",
+				"          BK_customer as integer,",
+				"          email as string,",
+				"          country as string,",
+				"          city as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          BK_customer = customer_id,",
+				"          email,",
+				"          country,",
+				"          city",
+				"     )) ~> DimCustomer"
+			]
+		}
+	}
+}

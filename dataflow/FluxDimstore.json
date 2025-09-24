@@ -1,0 +1,115 @@
+{
+	"name": "FluxDimstore",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "sakila",
+						"type": "LinkedServiceReference"
+					},
+					"name": "stafflist"
+				},
+				{
+					"linkedService": {
+						"referenceName": "sakila_DW_simple",
+						"type": "LinkedServiceReference"
+					},
+					"name": "dimstore2"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "sakila_DW_simple",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Dimstore"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectstore"
+				},
+				{
+					"name": "exists1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as integer,",
+				"          name as string,",
+				"          address as string,",
+				"          zip_code as string,",
+				"          phone as string,",
+				"          city as string,",
+				"          country as string,",
+				"          SID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'staff_list',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> stafflist",
+				"source(output(",
+				"          SK_store as integer,",
+				"          BK_store as integer,",
+				"          manager_full_name as string,",
+				"          country as string,",
+				"          city as string,",
+				"          address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Dim_Store',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> dimstore2",
+				"stafflist select(mapColumn(",
+				"          ID,",
+				"          name,",
+				"          address,",
+				"          city,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectstore",
+				"selectstore, dimstore2 exists(ID == BK_store,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SK_store as integer,",
+				"          BK_store as integer,",
+				"          manager_full_name as string,",
+				"          country as string,",
+				"          city as string,",
+				"          address as string",
+				"     ),",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Dim_Store',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          BK_store = ID,",
+				"          manager_full_name = name,",
+				"          address,",
+				"          city,",
+				"          country",
+				"     )) ~> Dimstore"
+			]
+		}
+	}
+}
