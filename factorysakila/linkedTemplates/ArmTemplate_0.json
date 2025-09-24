@@ -1,0 +1,1798 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nom de fabrique de données",
+			"defaultValue": "factorysakila"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « AzureSqlDatabase1 »"
+		},
+		"sakila_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila »"
+		},
+		"sakila_DW_simple_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila_DW_simple »"
+		},
+		"sakila_staging_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila_staging »"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakiladb"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila"
+		},
+		"sakila_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_DW_simple_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_DW_simple_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila_DW_simple"
+		},
+		"sakila_DW_simple_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_staging_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_staging_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila"
+		},
+		"sakila_staging_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sakila')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('sakila_properties_typeProperties_server')]",
+					"database": "[parameters('sakila_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('sakila_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('sakila_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sakila_DW_simple')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('sakila_DW_simple_properties_typeProperties_server')]",
+					"database": "[parameters('sakila_DW_simple_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('sakila_DW_simple_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('sakila_DW_simple_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sakila_staging')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('sakila_staging_properties_typeProperties_server')]",
+					"database": "[parameters('sakila_staging_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('sakila_staging_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('sakila_staging_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimCustomer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila_DW_simple",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "SK_customer",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BK_customer",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "email",
+						"type": "varchar"
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "city",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Dim_Customer"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dimfilm')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila_DW_simple",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "SK_film",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BK_film",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "title",
+						"type": "varchar"
+					},
+					{
+						"name": "length_min",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "language",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Dim_Film"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adresse')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "address_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "address",
+						"type": "varchar"
+					},
+					{
+						"name": "address2",
+						"type": "varchar"
+					},
+					{
+						"name": "district",
+						"type": "varchar"
+					},
+					{
+						"name": "city_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "postal_code",
+						"type": "varchar"
+					},
+					{
+						"name": "phone",
+						"type": "varchar"
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "address"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/city')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "city_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "city",
+						"type": "varchar"
+					},
+					{
+						"name": "country_id",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "city"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "country_id",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "country"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/customers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila_staging",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "customer_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "store_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "first_name",
+						"type": "varchar"
+					},
+					{
+						"name": "last_name",
+						"type": "varchar"
+					},
+					{
+						"name": "email",
+						"type": "varchar"
+					},
+					{
+						"name": "address_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "active",
+						"type": "char"
+					},
+					{
+						"name": "create_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "customer"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila_staging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila_DW_simple",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "row_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BK_inventory",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BK_rental",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BK_payment",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "total_payment",
+						"type": "decimal",
+						"precision": 15,
+						"scale": 2
+					},
+					{
+						"name": "datekey_rental",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "datekey_return",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "datekey_payment",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SK_customer",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SK_staff",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SK_store",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SK_film",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Fact_Rental"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/film')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "film_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "title",
+						"type": "varchar"
+					},
+					{
+						"name": "description",
+						"type": "text"
+					},
+					{
+						"name": "release_year",
+						"type": "varchar"
+					},
+					{
+						"name": "language_id",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "original_language_id",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "rental_duration",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "rental_rate",
+						"type": "decimal",
+						"precision": 4,
+						"scale": 2
+					},
+					{
+						"name": "length",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "replacement_cost",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "rating",
+						"type": "varchar"
+					},
+					{
+						"name": "special_features",
+						"type": "varchar"
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "film"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/language')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sakila",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "language_id",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "name",
+						"type": "char"
+					},
+					{
+						"name": "last_update",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "language"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FluxDimstore')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "sakila",
+								"type": "LinkedServiceReference"
+							},
+							"name": "stafflist"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "dimstore2"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "Dimstore"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectstore"
+						},
+						{
+							"name": "exists1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as integer,",
+						"          name as string,",
+						"          address as string,",
+						"          zip_code as string,",
+						"          phone as string,",
+						"          city as string,",
+						"          country as string,",
+						"          SID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'staff_list',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> stafflist",
+						"source(output(",
+						"          SK_store as integer,",
+						"          BK_store as integer,",
+						"          manager_full_name as string,",
+						"          country as string,",
+						"          city as string,",
+						"          address as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Store',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> dimstore2",
+						"stafflist select(mapColumn(",
+						"          ID,",
+						"          name,",
+						"          address,",
+						"          city,",
+						"          country",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectstore",
+						"selectstore, dimstore2 exists(ID == BK_store,",
+						"     negate:true,",
+						"     broadcast: 'auto')~> exists1",
+						"exists1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          SK_store as integer,",
+						"          BK_store as integer,",
+						"          manager_full_name as string,",
+						"          country as string,",
+						"          city as string,",
+						"          address as string",
+						"     ),",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Store',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          BK_store = ID,",
+						"          manager_full_name = name,",
+						"          address,",
+						"          city,",
+						"          country",
+						"     )) ~> Dimstore"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]",
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimCustomer')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "customers",
+								"type": "DatasetReference"
+							},
+							"name": "Customer"
+						},
+						{
+							"dataset": {
+								"referenceName": "city",
+								"type": "DatasetReference"
+							},
+							"name": "city"
+						},
+						{
+							"dataset": {
+								"referenceName": "country",
+								"type": "DatasetReference"
+							},
+							"name": "country"
+						},
+						{
+							"dataset": {
+								"referenceName": "adresse",
+								"type": "DatasetReference"
+							},
+							"name": "adresse"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "Dimcustomercheck"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DimCustomer",
+								"type": "DatasetReference"
+							},
+							"name": "DimCustomer"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectCity"
+						},
+						{
+							"name": "selectCountry"
+						},
+						{
+							"name": "selectAdresse"
+						},
+						{
+							"name": "selectCustomer"
+						},
+						{
+							"name": "jointureAdresse"
+						},
+						{
+							"name": "customerAdresse"
+						},
+						{
+							"name": "joindrecity"
+						},
+						{
+							"name": "joindreCountry"
+						},
+						{
+							"name": "selectFinal"
+						},
+						{
+							"name": "exists1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          customer_id as integer,",
+						"          store_id as integer,",
+						"          first_name as string,",
+						"          last_name as string,",
+						"          email as string,",
+						"          address_id as integer,",
+						"          active as string,",
+						"          create_date as timestamp,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Customer",
+						"source(output(",
+						"          city_id as integer,",
+						"          city as string,",
+						"          country_id as integer,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> city",
+						"source(output(",
+						"          country_id as integer,",
+						"          country as string,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> country",
+						"source(output(",
+						"          address_id as integer,",
+						"          address as string,",
+						"          address2 as string,",
+						"          district as string,",
+						"          city_id as integer,",
+						"          postal_code as string,",
+						"          phone as string,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> adresse",
+						"source(output(",
+						"          SK_customer as integer,",
+						"          BK_customer as integer,",
+						"          email as string,",
+						"          country as string,",
+						"          city as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Customer',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> Dimcustomercheck",
+						"city select(mapColumn(",
+						"          city_id,",
+						"          city,",
+						"          country_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectCity",
+						"country select(mapColumn(",
+						"          country_id,",
+						"          country",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectCountry",
+						"adresse select(mapColumn(",
+						"          address_id,",
+						"          city_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectAdresse",
+						"Customer select(mapColumn(",
+						"          customer_id,",
+						"          email,",
+						"          address_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectCustomer",
+						"selectCustomer, selectAdresse join(selectCustomer@address_id == selectAdresse@address_id,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> jointureAdresse",
+						"jointureAdresse select(mapColumn(",
+						"          customer_id,",
+						"          email,",
+						"          city_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> customerAdresse",
+						"customerAdresse, selectCity join(customerAdresse@city_id == selectCity@city_id,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindrecity",
+						"joindrecity, selectCountry join(selectCity@country_id == selectCountry@country_id,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindreCountry",
+						"joindreCountry select(mapColumn(",
+						"          customer_id,",
+						"          email,",
+						"          city,",
+						"          country",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectFinal",
+						"selectFinal, Dimcustomercheck exists(customer_id == BK_customer,",
+						"     negate:true,",
+						"     broadcast: 'auto')~> exists1",
+						"exists1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          SK_customer as integer,",
+						"          BK_customer as integer,",
+						"          email as string,",
+						"          country as string,",
+						"          city as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          BK_customer = customer_id,",
+						"          email,",
+						"          country,",
+						"          city",
+						"     )) ~> DimCustomer"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/customers')]",
+				"[concat(variables('factoryId'), '/datasets/city')]",
+				"[concat(variables('factoryId'), '/datasets/country')]",
+				"[concat(variables('factoryId'), '/datasets/adresse')]",
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]",
+				"[concat(variables('factoryId'), '/datasets/DimCustomer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FluxDimfilm')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "film",
+								"type": "DatasetReference"
+							},
+							"name": "film"
+						},
+						{
+							"dataset": {
+								"referenceName": "language",
+								"type": "DatasetReference"
+							},
+							"name": "Language"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "Dimfilmcheck"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Dimfilm",
+								"type": "DatasetReference"
+							},
+							"name": "Dimfilm"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectFilm"
+						},
+						{
+							"name": "selectLanguage"
+						},
+						{
+							"name": "jointureLanguage"
+						},
+						{
+							"name": "selectFinal"
+						},
+						{
+							"name": "exists1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          film_id as integer,",
+						"          title as string,",
+						"          description as string,",
+						"          release_year as string,",
+						"          language_id as integer,",
+						"          original_language_id as integer,",
+						"          rental_duration as integer,",
+						"          rental_rate as decimal(4,2),",
+						"          length as integer,",
+						"          replacement_cost as decimal(5,2),",
+						"          rating as string,",
+						"          special_features as string,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> film",
+						"source(output(",
+						"          language_id as integer,",
+						"          name as string,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Language",
+						"source(output(",
+						"          SK_film as integer,",
+						"          BK_film as integer,",
+						"          title as string,",
+						"          length_min as integer,",
+						"          language as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Film',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> Dimfilmcheck",
+						"film select(mapColumn(",
+						"          film_id,",
+						"          title,",
+						"          language_id,",
+						"          length",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectFilm",
+						"Language select(mapColumn(",
+						"          language_id,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectLanguage",
+						"selectFilm, selectLanguage join(selectFilm@language_id == selectLanguage@language_id,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> jointureLanguage",
+						"jointureLanguage select(mapColumn(",
+						"          film_id,",
+						"          title,",
+						"          length,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectFinal",
+						"selectFinal, Dimfilmcheck exists(film_id == BK_film,",
+						"     negate:true,",
+						"     broadcast: 'auto')~> exists1",
+						"exists1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          SK_film as integer,",
+						"          BK_film as integer,",
+						"          title as string,",
+						"          length_min as integer,",
+						"          language as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          BK_film = film_id,",
+						"          title,",
+						"          length_min = length,",
+						"          language = name",
+						"     )) ~> Dimfilm"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/film')]",
+				"[concat(variables('factoryId'), '/datasets/language')]",
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]",
+				"[concat(variables('factoryId'), '/datasets/Dimfilm')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FluxFact')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "sakila",
+								"type": "LinkedServiceReference"
+							},
+							"name": "rental"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "Dimcustomer"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "dimstore"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila_DW_simple",
+								"type": "LinkedServiceReference"
+							},
+							"name": "dimfil"
+						},
+						{
+							"dataset": {
+								"referenceName": "film",
+								"type": "DatasetReference"
+							},
+							"name": "film"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila",
+								"type": "LinkedServiceReference"
+							},
+							"name": "inventory"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sakila",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sourcePayment"
+						},
+						{
+							"dataset": {
+								"referenceName": "fact",
+								"type": "DatasetReference"
+							},
+							"name": "factckeck"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "fact",
+								"type": "DatasetReference"
+							},
+							"name": "Fact"
+						}
+					],
+					"transformations": [
+						{
+							"name": "payment2"
+						},
+						{
+							"name": "datekeyrental"
+						},
+						{
+							"name": "aggregatecustomer"
+						},
+						{
+							"name": "aggregateFilm"
+						},
+						{
+							"name": "aggregateStore"
+						},
+						{
+							"name": "joindreInventory"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "joindredimcustomer"
+						},
+						{
+							"name": "selectSKcustomer"
+						},
+						{
+							"name": "joindreSKstore"
+						},
+						{
+							"name": "selectSKstore"
+						},
+						{
+							"name": "joindreSKfilm"
+						},
+						{
+							"name": "selectSKfilm"
+						},
+						{
+							"name": "selectfinal"
+						},
+						{
+							"name": "Checkupdate"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          rental_id as integer,",
+						"          rental_date as timestamp,",
+						"          inventory_id as integer,",
+						"          customer_id as integer,",
+						"          return_date as timestamp,",
+						"          staff_id as integer,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'rental',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> rental",
+						"source(output(",
+						"          SK_customer as integer,",
+						"          BK_customer as integer,",
+						"          email as string,",
+						"          country as string,",
+						"          city as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Customer',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> Dimcustomer",
+						"source(output(",
+						"          SK_store as integer,",
+						"          BK_store as integer,",
+						"          manager_full_name as string,",
+						"          country as string,",
+						"          city as string,",
+						"          address as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Store',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> dimstore",
+						"source(output(",
+						"          SK_film as integer,",
+						"          BK_film as integer,",
+						"          title as string,",
+						"          length_min as integer,",
+						"          language as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Dim_Film',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> dimfil",
+						"source(output(",
+						"          film_id as integer,",
+						"          title as string,",
+						"          description as string,",
+						"          release_year as string,",
+						"          language_id as integer,",
+						"          original_language_id as integer,",
+						"          rental_duration as integer,",
+						"          rental_rate as decimal(4,2),",
+						"          length as integer,",
+						"          replacement_cost as decimal(5,2),",
+						"          rating as string,",
+						"          special_features as string,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> film",
+						"source(output(",
+						"          inventory_id as integer,",
+						"          film_id as integer,",
+						"          store_id as integer,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'inventory',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> inventory",
+						"source(output(",
+						"          payment_id as integer,",
+						"          customer_id as integer,",
+						"          staff_id as integer,",
+						"          rental_id as integer,",
+						"          amount as decimal(5,2),",
+						"          payment_date as timestamp,",
+						"          last_update as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'payment',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> sourcePayment",
+						"source(output(",
+						"          row_id as integer,",
+						"          BK_inventory as integer,",
+						"          BK_rental as integer,",
+						"          BK_payment as integer,",
+						"          total_payment as decimal(15,2),",
+						"          datekey_rental as integer,",
+						"          datekey_return as integer,",
+						"          datekey_payment as integer,",
+						"          SK_customer as integer,",
+						"          SK_staff as integer,",
+						"          SK_store as integer,",
+						"          SK_film as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> factckeck",
+						"sourcePayment derive(datekey_pay = toInteger(toString(toDate(payment_date), 'yyyyMMdd'))) ~> payment2",
+						"rental derive(datekey_rental = toInteger(toString(toDate(rental_date), 'yyyyMMdd')),",
+						"          datekey_return = toInteger(toString(toDate(return_date), 'yyyyMMdd'))) ~> datekeyrental",
+						"Dimcustomer aggregate(groupBy(BK_customer),",
+						"     SK_customer = max(SK_customer)) ~> aggregatecustomer",
+						"dimfil aggregate(groupBy(BK_film),",
+						"     SK_film = max(SK_film)) ~> aggregateFilm",
+						"dimstore aggregate(groupBy(BK_store),",
+						"     SK_store = max(SK_store)) ~> aggregateStore",
+						"datekeyrental, inventory join(rental@inventory_id == inventory@inventory_id,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindreInventory",
+						"joindreInventory, payment2 join(rental@rental_id == sourcePayment@rental_id,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 select(mapColumn(",
+						"          rental_id = rental@rental_id,",
+						"          inventory_id = rental@inventory_id,",
+						"          customer_id = rental@customer_id,",
+						"          staff_id = rental@staff_id,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          film_id,",
+						"          store_id,",
+						"          payment_id,",
+						"          amount,",
+						"          datekey_pay",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1, aggregatecustomer join(customer_id == BK_customer,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindredimcustomer",
+						"joindredimcustomer select(mapColumn(",
+						"          rental_id,",
+						"          inventory_id,",
+						"          customer_id,",
+						"          staff_id,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          film_id,",
+						"          store_id,",
+						"          payment_id,",
+						"          amount,",
+						"          datekey_pay,",
+						"          SK_customer",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectSKcustomer",
+						"selectSKcustomer, aggregateStore join(store_id == BK_store,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindreSKstore",
+						"joindreSKstore select(mapColumn(",
+						"          rental_id,",
+						"          inventory_id,",
+						"          customer_id,",
+						"          staff_id,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          film_id,",
+						"          store_id,",
+						"          payment_id,",
+						"          amount,",
+						"          datekey_pay,",
+						"          SK_customer,",
+						"          SK_store",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectSKstore",
+						"selectSKstore, aggregateFilm join(film_id == BK_film,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindreSKfilm",
+						"joindreSKfilm select(mapColumn(",
+						"          rental_id,",
+						"          inventory_id,",
+						"          customer_id,",
+						"          staff_id,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          film_id,",
+						"          store_id,",
+						"          payment_id,",
+						"          amount,",
+						"          datekey_pay,",
+						"          SK_customer,",
+						"          SK_store,",
+						"          SK_film,",
+						"          BK_film",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectSKfilm",
+						"selectSKfilm select(mapColumn(",
+						"          rental_id,",
+						"          inventory_id,",
+						"          customer_id,",
+						"          staff_id,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          film_id,",
+						"          store_id,",
+						"          payment_id,",
+						"          amount,",
+						"          datekey_pay,",
+						"          SK_customer,",
+						"          SK_store,",
+						"          SK_film",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectfinal",
+						"selectfinal, factckeck exists(inventory_id == row_id,",
+						"     negate:true,",
+						"     broadcast: 'auto')~> Checkupdate",
+						"Checkupdate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          row_id as integer,",
+						"          BK_inventory as integer,",
+						"          BK_rental as integer,",
+						"          BK_payment as integer,",
+						"          total_payment as decimal(15,2),",
+						"          datekey_rental as integer,",
+						"          datekey_return as integer,",
+						"          datekey_payment as integer,",
+						"          SK_customer as integer,",
+						"          SK_staff as integer,",
+						"          SK_store as integer,",
+						"          SK_film as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          BK_inventory = inventory_id,",
+						"          BK_rental = rental_id,",
+						"          BK_payment = payment_id,",
+						"          total_payment = amount,",
+						"          datekey_rental,",
+						"          datekey_return,",
+						"          datekey_payment = datekey_pay,",
+						"          SK_customer,",
+						"          SK_store,",
+						"          SK_film",
+						"     )) ~> Fact"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sakila')]",
+				"[concat(variables('factoryId'), '/linkedServices/sakila_DW_simple')]",
+				"[concat(variables('factoryId'), '/datasets/film')]",
+				"[concat(variables('factoryId'), '/datasets/fact')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelineDimensions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DimCustomer",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DimCustomer",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Customer": {},
+									"city": {},
+									"country": {},
+									"adresse": {},
+									"Dimcustomercheck": {},
+									"DimCustomer": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "FluxDimfilm",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "FluxDimfilm",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"film": {},
+									"Language": {},
+									"Dimfilmcheck": {},
+									"Dimfilm": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "FluxDimstore",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "FluxDimstore",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"stafflist": {},
+									"dimstore2": {},
+									"Dimstore": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-09-24T13:33:19Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DimCustomer')]",
+				"[concat(variables('factoryId'), '/dataflows/FluxDimfilm')]",
+				"[concat(variables('factoryId'), '/dataflows/FluxDimstore')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelineFact')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "FluxFact",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "FluxFact",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"rental": {},
+									"Dimcustomer": {},
+									"dimstore": {},
+									"dimfil": {},
+									"film": {},
+									"inventory": {},
+									"sourcePayment": {},
+									"factckeck": {},
+									"Fact": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-09-24T13:33:20Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/FluxFact')]"
+			]
+		}
+	]
+}

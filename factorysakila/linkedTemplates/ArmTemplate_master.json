@@ -1,0 +1,161 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nom de fabrique de données",
+			"defaultValue": "factorysakila"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « AzureSqlDatabase1 »"
+		},
+		"sakila_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila »"
+		},
+		"sakila_DW_simple_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila_DW_simple »"
+		},
+		"sakila_staging_password": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « password » de « sakila_staging »"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakiladb"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila"
+		},
+		"sakila_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_DW_simple_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_DW_simple_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila_DW_simple"
+		},
+		"sakila_DW_simple_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"sakila_staging_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "serversakila.database.windows.net"
+		},
+		"sakila_staging_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sakila"
+		},
+		"sakila_staging_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "hassan"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI pour le compte de stockage contenant des modèles ARM liés"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Jeton SAS pour le compte de stockage contenant des modèles ARM liés"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "factorysakila_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureSqlDatabase1_password": {
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					},
+					"sakila_password": {
+						"value": "[parameters('sakila_password')]"
+					},
+					"sakila_DW_simple_password": {
+						"value": "[parameters('sakila_DW_simple_password')]"
+					},
+					"sakila_staging_password": {
+						"value": "[parameters('sakila_staging_password')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
+					},
+					"sakila_properties_typeProperties_server": {
+						"value": "[parameters('sakila_properties_typeProperties_server')]"
+					},
+					"sakila_properties_typeProperties_database": {
+						"value": "[parameters('sakila_properties_typeProperties_database')]"
+					},
+					"sakila_properties_typeProperties_userName": {
+						"value": "[parameters('sakila_properties_typeProperties_userName')]"
+					},
+					"sakila_DW_simple_properties_typeProperties_server": {
+						"value": "[parameters('sakila_DW_simple_properties_typeProperties_server')]"
+					},
+					"sakila_DW_simple_properties_typeProperties_database": {
+						"value": "[parameters('sakila_DW_simple_properties_typeProperties_database')]"
+					},
+					"sakila_DW_simple_properties_typeProperties_userName": {
+						"value": "[parameters('sakila_DW_simple_properties_typeProperties_userName')]"
+					},
+					"sakila_staging_properties_typeProperties_server": {
+						"value": "[parameters('sakila_staging_properties_typeProperties_server')]"
+					},
+					"sakila_staging_properties_typeProperties_database": {
+						"value": "[parameters('sakila_staging_properties_typeProperties_database')]"
+					},
+					"sakila_staging_properties_typeProperties_userName": {
+						"value": "[parameters('sakila_staging_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
